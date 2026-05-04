@@ -54,48 +54,83 @@ export default function Home() {
     setAnswers(prev => ({ ...prev, [qIdx]: option }))
   }
 
+  const suggestedTopics = ['Black Holes', 'Ancient Rome', 'Photosynthesis', 'Quantum Computing']
+
   return (
     <>
       <Head>
         <title>Learning Assistant</title>
-        <meta name="description" content="Enter a topic and grade to get an explanation, key points, and a quiz." />
+        <meta name="description" content="AI-powered educational content generator." />
       </Head>
 
-      <div className="page">
+      <div className={`page ${!result && !loading ? 'landing-layout' : ''}`}>
         {/* Header */}
         <header className="site-header">
           <h1>Learning Assistant</h1>
-          <p>Enter a topic and grade to get a summary, key points, and a short quiz.</p>
+          <p>Get clear summaries, key points, and quizzes on any topic.</p>
         </header>
 
         {/* Search Form */}
-        <div className="form-row">
-          <input
-            type="text"
-            placeholder="Topic — e.g. The French Revolution"
-            value={topic}
-            onChange={e => setTopic(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && submit()}
-          />
-          <select value={grade} onChange={e => setGrade(e.target.value)}>
-            {Array.from({ length: 12 }, (_, i) => i + 1).map(g => (
-              <option key={g} value={g}>Grade {g}</option>
-            ))}
-          </select>
-          <button className="btn-primary" onClick={() => submit()} disabled={loading}>
-            {loading ? <span className="spinner" /> : 'Generate'}
-          </button>
+        <div className="form-container">
+          <div className="form-row">
+            <input
+              type="text"
+              placeholder="Topic — e.g. Plate Tectonics"
+              value={topic}
+              onChange={e => setTopic(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && submit()}
+            />
+            <select value={grade} onChange={e => setGrade(e.target.value)}>
+              {Array.from({ length: 12 }, (_, i) => i + 1).map(g => (
+                <option key={g} value={g}>Grade {g}</option>
+              ))}
+            </select>
+            <button className="btn-primary" onClick={() => submit()} disabled={loading}>
+              {loading ? <span className="spinner" /> : 'Generate'}
+            </button>
+          </div>
+
+          {!result && !loading && (
+            <div className="suggestions">
+              <span className="history-label">Try searching:</span>
+              {suggestedTopics.map((h, i) => (
+                <button key={i} className="history-chip" onClick={() => { setTopic(h); submit(h) }}>
+                  {h}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {history.length > 0 && result && (
+            <div className="history-row">
+              <span className="history-label">Recent</span>
+              {history.map((h, i) => (
+                <button key={i} className="history-chip" onClick={() => { setTopic(h); submit(h) }}>
+                  {h}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
-        {/* Recent Searches */}
-        {history.length > 0 && (
-          <div className="history-row">
-            <span className="history-label">Recent</span>
-            {history.map((h, i) => (
-              <button key={i} className="history-chip" onClick={() => { setTopic(h); submit(h) }}>
-                {h}
-              </button>
-            ))}
+        {/* Empty State Features */}
+        {!result && !loading && !error && (
+          <div className="features-grid">
+            <div className="feature-item">
+              <div className="feature-icon">📚</div>
+              <h3>Smart Summaries</h3>
+              <p>Generated based on your grade level for maximum clarity.</p>
+            </div>
+            <div className="feature-item">
+              <div className="feature-icon">⚡</div>
+              <h3>Key Takeaways</h3>
+              <p>Fast learning with 3-5 high-impact bullet points.</p>
+            </div>
+            <div className="feature-item">
+              <div className="feature-icon">📝</div>
+              <h3>Instant Quizzes</h3>
+              <p>Test your knowledge immediately with interactive questions.</p>
+            </div>
           </div>
         )}
 
@@ -104,7 +139,7 @@ export default function Home() {
 
         {/* Results */}
         {result && (
-          <>
+          <div className="result-area">
             <hr className="divider" />
 
             {/* Summary */}
@@ -180,13 +215,12 @@ export default function Home() {
               </div>
             </section>
 
-            {/* Regenerate */}
             <div className="actions-row">
               <button className="btn-ghost" onClick={() => submit()}>
                 Regenerate
               </button>
             </div>
-          </>
+          </div>
         )}
       </div>
     </>

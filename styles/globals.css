@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lora:ital,wght@1,500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 
 * {
   margin: 0;
@@ -18,27 +18,40 @@ body {
   max-width: 720px;
   margin: 0 auto;
   padding: 60px 24px 120px;
+  transition: all 0.4s ease;
+}
+
+.landing-layout {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 90vh;
+  padding-bottom: 60px;
 }
 
 /* ── Header ── */
 .site-header {
-  margin-bottom: 56px;
+  margin-bottom: 40px;
 }
 
 .site-header h1 {
-  font-size: 1.75rem;
+  font-size: 2rem;
   font-weight: 600;
   letter-spacing: -0.5px;
   color: #111;
 }
 
 .site-header p {
-  margin-top: 6px;
-  font-size: 0.95rem;
-  color: #888;
+  margin-top: 8px;
+  font-size: 1rem;
+  color: #777;
 }
 
 /* ── Search Form ── */
+.form-container {
+  margin-bottom: 20px;
+}
+
 .form-row {
   display: flex;
   gap: 10px;
@@ -47,15 +60,16 @@ body {
 
 input[type="text"] {
   flex: 1;
-  min-width: 200px;
-  padding: 11px 16px;
+  min-width: 260px;
+  padding: 12px 18px;
   border: 1px solid #d9d9d9;
-  border-radius: 8px;
-  font-size: 0.95rem;
+  border-radius: 10px;
+  font-size: 1rem;
   font-family: 'Inter', sans-serif;
   background: #fff;
   color: #111;
   transition: border-color 0.2s;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
 
 input[type="text"]:focus {
@@ -64,10 +78,10 @@ input[type="text"]:focus {
 }
 
 select {
-  padding: 11px 14px;
+  padding: 12px 14px;
   border: 1px solid #d9d9d9;
-  border-radius: 8px;
-  font-size: 0.95rem;
+  border-radius: 10px;
+  font-size: 1rem;
   font-family: 'Inter', sans-serif;
   background: #fff;
   color: #111;
@@ -75,18 +89,13 @@ select {
   transition: border-color 0.2s;
 }
 
-select:focus {
-  outline: none;
-  border-color: #111;
-}
-
 .btn-primary {
-  padding: 11px 20px;
+  padding: 12px 24px;
   background: #111;
   color: #fff;
   border: none;
-  border-radius: 8px;
-  font-size: 0.95rem;
+  border-radius: 10px;
+  font-size: 1rem;
   font-family: 'Inter', sans-serif;
   font-weight: 500;
   cursor: pointer;
@@ -116,33 +125,65 @@ select:focus {
 
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* ── History ── */
-.history-row {
+/* ── History & Suggestions ── */
+.history-row, .suggestions {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-top: 14px;
+  margin-top: 20px;
   flex-wrap: wrap;
 }
 
 .history-label {
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   color: #aaa;
 }
 
 .history-chip {
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   color: #555;
-  background: #efefef;
-  border: none;
-  padding: 4px 12px;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  padding: 5px 14px;
   border-radius: 20px;
   cursor: pointer;
-  transition: background 0.15s;
+  transition: all 0.15s;
 }
 
 .history-chip:hover {
-  background: #e0e0e0;
+  background: #f0f0f0;
+  border-color: #ccc;
+}
+
+/* ── Features Grid (Empty State) ── */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 30px;
+  margin-top: 60px;
+  animation: fadeIn 0.8s ease;
+}
+
+.feature-item {
+  text-align: left;
+}
+
+.feature-icon {
+  font-size: 1.5rem;
+  margin-bottom: 12px;
+}
+
+.feature-item h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #111;
+  margin-bottom: 6px;
+}
+
+.feature-item p {
+  font-size: 0.85rem;
+  color: #777;
+  line-height: 1.5;
 }
 
 /* ── Divider ── */
@@ -154,7 +195,7 @@ select:focus {
 
 /* ── Section Labels ── */
 .section-label {
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -164,9 +205,9 @@ select:focus {
 
 /* ── Summary ── */
 .summary-text {
-  font-size: 1.05rem;
-  line-height: 1.75;
-  color: #333;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #222;
 }
 
 /* ── Toggle ── */
@@ -182,6 +223,7 @@ select:focus {
   border: 1px solid #d9d9d9;
   border-radius: 8px;
   overflow: hidden;
+  background: #fff;
 }
 
 .toggle-pill {
@@ -205,25 +247,25 @@ select:focus {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
 .points-list li {
   display: flex;
-  gap: 12px;
+  gap: 14px;
   align-items: flex-start;
-  font-size: 0.95rem;
+  font-size: 1rem;
   line-height: 1.6;
   color: #333;
 }
 
 .point-number {
-  min-width: 22px;
-  height: 22px;
+  min-width: 24px;
+  height: 24px;
   border-radius: 50%;
-  background: #f0f0f0;
+  background: #efefee;
   color: #888;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -236,40 +278,40 @@ select:focus {
 .quiz-questions {
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 32px;
 }
 
 .quiz-q {
-  font-size: 0.95rem;
+  font-size: 1.05rem;
   font-weight: 500;
   color: #111;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
   line-height: 1.5;
 }
 
 .options-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 
 .option-btn {
   width: 100%;
   text-align: left;
-  padding: 10px 14px;
+  padding: 12px 16px;
   border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  font-size: 0.9rem;
+  border-radius: 10px;
+  font-size: 0.95rem;
   font-family: 'Inter', sans-serif;
   color: #333;
   background: #fff;
   cursor: pointer;
-  transition: border-color 0.15s, background 0.15s;
+  transition: all 0.15s;
 }
 
 .option-btn:hover:not(:disabled) {
   border-color: #bbb;
-  background: #fafafa;
+  background: #fcfcfc;
 }
 
 .option-btn.correct {
@@ -288,19 +330,19 @@ select:focus {
 .actions-row {
   display: flex;
   justify-content: flex-end;
-  margin-top: 32px;
+  margin-top: 48px;
 }
 
 .btn-ghost {
-  padding: 8px 16px;
+  padding: 10px 20px;
   border: 1px solid #d9d9d9;
-  border-radius: 8px;
+  border-radius: 10px;
   background: #fff;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   font-family: 'Inter', sans-serif;
   color: #555;
   cursor: pointer;
-  transition: border-color 0.15s;
+  transition: all 0.15s;
 }
 
 .btn-ghost:hover {
@@ -310,16 +352,27 @@ select:focus {
 
 /* ── Error ── */
 .error-box {
-  padding: 14px 18px;
+  padding: 16px 20px;
   border: 1px solid #fca5a5;
   background: #fef2f2;
-  border-radius: 8px;
-  font-size: 0.9rem;
+  border-radius: 10px;
+  font-size: 0.95rem;
   color: #b91c1c;
-  margin-top: 24px;
+  margin-top: 30px;
+}
+
+.result-area {
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @media (max-width: 600px) {
-  .site-header h1 { font-size: 1.4rem; }
+  .site-header h1 { font-size: 1.75rem; }
   .form-row { flex-direction: column; }
+  .features-grid { grid-template-columns: 1fr; gap: 40px; margin-top: 40px; }
+  .landing-layout { justify-content: flex-start; padding-top: 20px; }
 }
