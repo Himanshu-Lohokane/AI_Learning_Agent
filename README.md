@@ -7,14 +7,14 @@ An intelligent, full-stack educational tool designed to transform any topic into
 The **AI Learning Assistant** takes a complex topic and a specific grade level to generate:
 - **Personalized Summaries**: Tailored to the student's age and comprehension level.
 - **Key Learning Points**: High-impact takeaways for quick mastery.
-- **Interactive Quizzes**: Instant knowledge checks with real-time feedback.
+- **Interactive Quizzes**: Comprehensive knowledge checks (8 questions) with real-time feedback.
 
 ## ✨ Key Features & Requirements
 
 This project fulfills all core and additional requirements of the assignment:
 
 ### 1. Backend & AI Integration
-- **OpenRouter API**: Integrated with **Claude 3 Haiku** for high-quality, reliable educational content.
+- **OpenRouter API**: Integrated with **Claude Haiku 4.5** for high-quality, reliable educational content.
 - **Structured JSON Output**: The system strictly enforces a JSON response format for seamless parsing.
 - **Paraphrasing Layer**: Implements a dedicated pass to simplify complex summaries for younger audiences.
 
@@ -34,7 +34,7 @@ This project fulfills all core and additional requirements of the assignment:
 
 - **Frontend**: Next.js (React), CSS Modules
 - **Backend**: Next.js API Routes (Node.js)
-- **AI**: OpenRouter (Claude 3 Haiku)
+- **AI**: OpenRouter (Claude Haiku 4.5)
 - **Deployment**: Vercel ready
 
 ## ⚙️ Setup Instructions
@@ -54,7 +54,7 @@ npm install
 Create a `.env.local` file in the root directory:
 ```env
 OPENROUTER_API_KEY=your_key_here
-OPENROUTER_MODEL=anthropic/claude-3-haiku
+OPENROUTER_MODEL=anthropic/claude-haiku-4.5
 USE_MOCK_AI=false
 ```
 
@@ -73,7 +73,7 @@ Open [http://localhost:3000](http://localhost:3000) to start learning!
 
 ### Assumptions
 - **Grade Levels**: Assumed a standard 1-12 grade system.
-- **Quiz Format**: Assumed a fixed 3-question multiple-choice format to keep the learning experience concise and high-impact.
+- **Quiz Format**: Assumed a fixed 8-question multiple-choice format to ensure thorough assessment.
 - **Content Language**: Optimized for English language instruction.
 
 ---

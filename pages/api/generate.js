@@ -37,7 +37,7 @@ export default async function handler(req, res){
       summary: normalSummary, 
       simplifiedSummary: simplifiedSummary, 
       keyPoints: parsed.keyPoints.slice(0, 5), 
-      quiz: parsed.quiz.slice(0, 3).map(q => ({
+      quiz: parsed.quiz.slice(0, 8).map(q => ({
         ...q,
         options: Array.isArray(q.options) ? q.options.slice(0, 4) : ['A','B','C','D']
       }))

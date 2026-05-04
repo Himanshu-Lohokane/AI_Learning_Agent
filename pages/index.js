@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import Head from 'next/head'
 
-function useTypewriter(text, speed = 12) {
+function useTypewriter(text, speed = 5) {
   const [displayed, setDisplayed] = useState('')
   const [done, setDone] = useState(false)
   const prev = useRef('')
@@ -130,7 +130,15 @@ export default function Home() {
       </Head>
 
       <div className={`page ${!result && !loading ? 'landing-layout' : ''}`}>
-
+        {loading && (
+          <div className="loading-overlay">
+            <div className="loading-content">
+              <div className="spinner-large"></div>
+              <p>Generating your learning guide...</p>
+              <span className="loading-subtext">This usually takes 10-15 seconds</span>
+            </div>
+          </div>
+        )}
         {/* Header */}
         <header className="site-header">
           <h1>Learning Assistant</h1>
