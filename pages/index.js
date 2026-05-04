@@ -1,15 +1,59 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Head from 'next/head'
 
+function useTypewriter(text, speed = 12) {
+  const [displayed, setDisplayed] = useState('')
+  const [done, setDone] = useState(false)
+  const prev = useRef('')
+
+  useEffect(() => {
+    if (!text) { setDisplayed(''); setDone(false); return }
+    if (text === prev.current) return
+    prev.current = text
+    setDone(false)
+    setDisplayed('')
+    let i = 0
+    const interval = setInterval(() => {
+      i++
+      setDisplayed(text.slice(0, i))
+      if (i >= text.length) { clearInterval(interval); setDone(true) }
+    }, speed)
+    return () => clearInterval(interval)
+  }, [text, speed])
+
+  return { displayed, done }
+}
+
+function readingTime(text) {
+  if (!text) return null
+  const words = text.trim().split(/\s+/).length
+  const mins = Math.max(1, Math.round(words / 200))
+  return `${mins} min read`
+}
+
+function gradeLabel(grade) {
+  const g = parseInt(grade)
+  if (g <= 3) return 'Beginner'
+  if (g <= 6) return 'Elementary'
+  if (g <= 9) return 'Intermediate'
+  return 'Advanced'
+}
+
 export default function Home() {
-  const [topic, setTopic] = useState('')
-  const [grade, setGrade] = useState('6')
-  const [loading, setLoading] = useState(false)
-  const [result, setResult] = useState(null)
-  const [error, setError] = useState('')
-  const [simplified, setSimplified] = useState(false)
-  const [history, setHistory] = useState([])
-  const [answers, setAnswers] = useState({})
+  const [topic, setTopic]       = useState('')
+  const [grade, setGrade]       = useState('6')
+  const [loading, setLoading]   = useState(false)
+  const [result, setResult]     = useState(null)
+  const [error, setError]       = useState('')
+
+  const [history, setHistory]   = useState([])
+  const [answers, setAnswers]   = useState({})
+  const [copied, setCopied]     = useState(false)
+  const [currentTopic, setCurrentTopic] = useState('')
+  const [currentGrade, setCurrentGrade] = useState('6')
+
+  const summaryText = result?.summary ?? ''
+  const { displayed: typedSummary, done: typingDone } = useTypewriter(summaryText)
 
   useEffect(() => {
     try {
@@ -31,7 +75,7 @@ export default function Home() {
     setError('')
     setResult(null)
     setAnswers({})
-    setSimplified(false)
+    setCopied(false)
     try {
       const res = await fetch('/api/generate', {
         method: 'POST',
@@ -41,6 +85,8 @@ export default function Home() {
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Something went wrong')
       setResult(data)
+      setCurrentTopic(q)
+      setCurrentGrade(grade)
       saveHistory(q)
     } catch (e) {
       setError(e.message)
@@ -54,6 +100,26 @@ export default function Home() {
     setAnswers(prev => ({ ...prev, [qIdx]: option }))
   }
 
+  const retryQuiz = () => setAnswers({})
+
+  const copyText = () => {
+    if (!result) return
+    navigator.clipboard.writeText(summaryText).then(() => {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    })
+  }
+
+  const handlePrint = () => window.print()
+
+  const totalQuestions = result?.quiz?.length ?? 0
+  const answeredCount  = Object.keys(answers).length
+  const correctCount   = result?.quiz
+    ? result.quiz.filter((q, i) => answers[i] === q.correctAnswer).length
+    : 0
+  const quizComplete   = answeredCount === totalQuestions && totalQuestions > 0
+  const quizPassed     = correctCount >= Math.ceil(totalQuestions / 2)
+
   const suggestedTopics = ['Black Holes', 'Ancient Rome', 'Photosynthesis', 'Quantum Computing']
 
   return (
@@ -64,6 +130,7 @@ export default function Home() {
       </Head>
 
       <div className={`page ${!result && !loading ? 'landing-layout' : ''}`}>
+
         {/* Header */}
         <header className="site-header">
           <h1>Learning Assistant</h1>
@@ -124,7 +191,7 @@ export default function Home() {
             <div className="feature-item">
               <div className="feature-icon">⚡</div>
               <h3>Key Takeaways</h3>
-              <p>Fast learning with 3-5 high-impact bullet points.</p>
+              <p>Fast learning with 3–5 high-impact bullet points.</p>
             </div>
             <div className="feature-item">
               <div className="feature-icon">📝</div>
@@ -139,30 +206,32 @@ export default function Home() {
 
         {/* Results */}
         {result && (
-          <div className="result-area">
+          <div className="result-area" id="printable">
             <hr className="divider" />
 
-            {/* Summary */}
-            <section>
-              <div className="toggle-row">
-                <p className="section-label">Summary</p>
-                <div className="toggle-pills">
-                  <button
-                    className={`toggle-pill ${!simplified ? 'active' : ''}`}
-                    onClick={() => setSimplified(false)}
-                  >
-                    Normal
-                  </button>
-                  <button
-                    className={`toggle-pill ${simplified ? 'active' : ''}`}
-                    onClick={() => setSimplified(true)}
-                  >
-                    Simplified
-                  </button>
-                </div>
+            {/* Meta Row */}
+            <div className="meta-row">
+              <div className="meta-tags">
+                <span className="meta-tag">Grade {currentGrade}</span>
+                <span className="meta-tag">{gradeLabel(currentGrade)}</span>
+                <span className="meta-tag">{readingTime(result.summary)}</span>
               </div>
+              <div className="meta-actions no-print">
+                <button className="icon-btn" onClick={copyText} title="Copy summary">
+                  {copied ? '✓ Copied' : 'Copy'}
+                </button>
+                <button className="icon-btn" onClick={handlePrint} title="Save as PDF">
+                  Print
+                </button>
+              </div>
+            </div>
+
+            {/* Summary */}
+            <section style={{ marginTop: '28px' }}>
+              <p className="section-label" style={{ marginBottom: '20px' }}>Summary</p>
               <p className="summary-text">
-                {simplified ? result.simplifiedSummary : result.summary}
+                {typedSummary}
+                {!typingDone && <span className="cursor-blink">|</span>}
               </p>
             </section>
 
@@ -185,16 +254,34 @@ export default function Home() {
 
             {/* Quiz */}
             <section>
-              <p className="section-label">Quiz</p>
+              <div className="quiz-header">
+                <p className="section-label">Quiz</p>
+                {totalQuestions > 0 && (
+                  <span className="quiz-progress no-print">
+                    {answeredCount}/{totalQuestions} answered
+                  </span>
+                )}
+              </div>
+
+              {/* Progress Bar */}
+              {totalQuestions > 0 && (
+                <div className="progress-bar-track no-print">
+                  <div
+                    className="progress-bar-fill"
+                    style={{ width: `${(answeredCount / totalQuestions) * 100}%` }}
+                  />
+                </div>
+              )}
+
               <div className="quiz-questions">
                 {result.quiz.map((q, qi) => (
                   <div key={qi}>
-                    <p className="quiz-q">{q.question}</p>
+                    <p className="quiz-q">{qi + 1}. {q.question}</p>
                     <div className="options-list">
                       {q.options.map((opt, oi) => {
-                        const answered = answers[qi] !== undefined
-                        const isCorrect = opt === q.correctAnswer
-                        const isSelected = answers[qi] === opt
+                        const answered    = answers[qi] !== undefined
+                        const isCorrect   = opt === q.correctAnswer
+                        const isSelected  = answers[qi] === opt
                         let cls = 'option-btn'
                         if (answered && isCorrect) cls += ' correct'
                         else if (answered && isSelected) cls += ' wrong'
@@ -206,6 +293,8 @@ export default function Home() {
                             onClick={() => pick(qi, opt)}
                           >
                             {opt}
+                            {answered && isCorrect && <span className="opt-badge pass">✓</span>}
+                            {answered && isSelected && !isCorrect && <span className="opt-badge fail">✗</span>}
                           </button>
                         )
                       })}
@@ -213,12 +302,22 @@ export default function Home() {
                   </div>
                 ))}
               </div>
+
+              {/* Score Card */}
+              {quizComplete && (
+                <div className={`score-card ${quizPassed ? 'pass' : 'fail'} no-print`}>
+                  <div className="score-number">{correctCount}/{totalQuestions}</div>
+                  <div className="score-label">
+                    {quizPassed ? 'Nice work! You passed.' : 'Keep studying — you\'ll get it!'}
+                  </div>
+                  <button className="retry-btn" onClick={retryQuiz}>Try Again</button>
+                </div>
+              )}
             </section>
 
-            <div className="actions-row">
-              <button className="btn-ghost" onClick={() => submit()}>
-                Regenerate
-              </button>
+            {/* Bottom Actions */}
+            <div className="actions-row no-print">
+              <button className="btn-ghost" onClick={() => submit()}>Regenerate</button>
             </div>
           </div>
         )}

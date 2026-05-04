@@ -18,7 +18,6 @@ body {
   max-width: 720px;
   margin: 0 auto;
   padding: 60px 24px 120px;
-  transition: all 0.4s ease;
 }
 
 .landing-layout {
@@ -86,7 +85,6 @@ select {
   background: #fff;
   color: #111;
   cursor: pointer;
-  transition: border-color 0.2s;
 }
 
 .btn-primary {
@@ -103,14 +101,8 @@ select {
   white-space: nowrap;
 }
 
-.btn-primary:hover {
-  background: #333;
-}
-
-.btn-primary:disabled {
-  background: #999;
-  cursor: not-allowed;
-}
+.btn-primary:hover { background: #333; }
+.btn-primary:disabled { background: #999; cursor: not-allowed; }
 
 /* ── Spinner ── */
 .spinner {
@@ -158,39 +150,66 @@ select {
 /* ── Features Grid (Empty State) ── */
 .features-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 30px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 40px;
   margin-top: 60px;
-  animation: fadeIn 0.8s ease;
+  animation: fadeIn 0.6s ease;
 }
 
-.feature-item {
-  text-align: left;
-}
-
-.feature-icon {
-  font-size: 1.5rem;
-  margin-bottom: 12px;
-}
-
-.feature-item h3 {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #111;
-  margin-bottom: 6px;
-}
-
-.feature-item p {
-  font-size: 0.85rem;
-  color: #777;
-  line-height: 1.5;
-}
+.feature-item { text-align: left; }
+.feature-icon { font-size: 1.5rem; margin-bottom: 12px; }
+.feature-item h3 { font-size: 0.95rem; font-weight: 600; color: #111; margin-bottom: 6px; }
+.feature-item p { font-size: 0.85rem; color: #777; line-height: 1.5; }
 
 /* ── Divider ── */
 .divider {
   border: none;
   border-top: 1px solid #e8e8e8;
   margin: 40px 0;
+}
+
+/* ── Meta Row ── */
+.meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.meta-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.meta-tag {
+  font-size: 0.78rem;
+  color: #666;
+  background: #f0f0ef;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.meta-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.icon-btn {
+  font-size: 0.85rem;
+  color: #555;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  padding: 5px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.icon-btn:hover {
+  border-color: #aaa;
+  color: #111;
 }
 
 /* ── Section Labels ── */
@@ -200,7 +219,7 @@ select {
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: #aaa;
-  margin-bottom: 16px;
+  margin-bottom: 0;
 }
 
 /* ── Summary ── */
@@ -210,12 +229,22 @@ select {
   color: #222;
 }
 
+.cursor-blink {
+  animation: blink 0.8s step-start infinite;
+  color: #aaa;
+  font-weight: 300;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
 /* ── Toggle ── */
 .toggle-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
 .toggle-pills {
@@ -237,10 +266,7 @@ select {
   transition: all 0.15s;
 }
 
-.toggle-pill.active {
-  background: #111;
-  color: #fff;
-}
+.toggle-pill.active { background: #111; color: #fff; }
 
 /* ── Key Points ── */
 .points-list {
@@ -275,6 +301,35 @@ select {
 }
 
 /* ── Quiz ── */
+.quiz-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.quiz-progress {
+  font-size: 0.8rem;
+  color: #aaa;
+}
+
+/* Progress Bar */
+.progress-bar-track {
+  width: 100%;
+  height: 3px;
+  background: #eee;
+  border-radius: 2px;
+  margin-bottom: 28px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: #111;
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+
 .quiz-questions {
   display: flex;
   flex-direction: column;
@@ -282,7 +337,7 @@ select {
 }
 
 .quiz-q {
-  font-size: 1.05rem;
+  font-size: 1rem;
   font-weight: 500;
   color: #111;
   margin-bottom: 14px;
@@ -307,6 +362,9 @@ select {
   background: #fff;
   cursor: pointer;
   transition: all 0.15s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .option-btn:hover:not(:disabled) {
@@ -326,7 +384,69 @@ select {
   color: #dc2626;
 }
 
-/* ── Actions Row ── */
+.opt-badge {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.opt-badge.pass { color: #16a34a; }
+.opt-badge.fail { color: #dc2626; }
+
+/* ── Score Card ── */
+.score-card {
+  margin-top: 32px;
+  padding: 24px 28px;
+  border-radius: 12px;
+  border: 1px solid;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  animation: fadeIn 0.4s ease;
+}
+
+.score-card.pass {
+  background: #f0fdf4;
+  border-color: #86efac;
+}
+
+.score-card.fail {
+  background: #fefce8;
+  border-color: #fde047;
+}
+
+.score-number {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #111;
+  white-space: nowrap;
+}
+
+.score-label {
+  font-size: 0.95rem;
+  color: #444;
+  flex: 1;
+}
+
+.retry-btn {
+  padding: 8px 18px;
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  background: #fff;
+  color: #333;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+
+.retry-btn:hover {
+  border-color: #aaa;
+  color: #111;
+}
+
+/* ── Bottom Actions ── */
 .actions-row {
   display: flex;
   justify-content: flex-end;
@@ -345,10 +465,7 @@ select {
   transition: all 0.15s;
 }
 
-.btn-ghost:hover {
-  border-color: #aaa;
-  color: #111;
-}
+.btn-ghost:hover { border-color: #aaa; color: #111; }
 
 /* ── Error ── */
 .error-box {
@@ -361,18 +478,43 @@ select {
   margin-top: 30px;
 }
 
-.result-area {
-  animation: fadeIn 0.5s ease;
-}
+.result-area { animation: fadeIn 0.5s ease; }
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
+/* ── Print Styles ── */
+@media print {
+  body { background: #fff; font-size: 12pt; }
+
+  .no-print { display: none !important; }
+
+  .page {
+    max-width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+
+  .site-header h1 { font-size: 18pt; }
+
+  .summary-text { font-size: 11pt; line-height: 1.7; }
+
+  .option-btn {
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 8px 12px;
+  }
+
+  .option-btn.correct { background: #e8f5e9 !important; color: #2e7d32 !important; }
+}
+
+/* ── Responsive ── */
 @media (max-width: 600px) {
   .site-header h1 { font-size: 1.75rem; }
   .form-row { flex-direction: column; }
   .features-grid { grid-template-columns: 1fr; gap: 40px; margin-top: 40px; }
   .landing-layout { justify-content: flex-start; padding-top: 20px; }
+  .score-card { flex-direction: column; text-align: center; }
 }
